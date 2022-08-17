@@ -9,9 +9,9 @@ import javax.validation.constraints.NotNull;
 
 public class ProdutoForm {
 
-    @NotNull @NotEmpty @Length(min = 5)
+
     private String description;
-    @NotNull @NotEmpty @Length(min = 4)
+
     private String name;
 
     private Double price;

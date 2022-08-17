@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProtdutoRepository extends JpaRepository<Produto, Integer> {
 
@@ -13,8 +14,10 @@ public interface ProtdutoRepository extends JpaRepository<Produto, Integer> {
     Produto findByName(@Param("name") String produtoName);
 
 
-    Produto findByPriceGreaterThan(@Param("price") Double produtoPrice);
+    @Query("SELECT p FROM Produto p WHERE p.price >= :price")
+    List<Produto> findByPrice(@Param("price") Double produtoPrice);
 
 
-    Produto findByPriceLessThan(@Param("price") Double produtoPrice);
+    @Query("SELECT p FROM Produto p WHERE p.price <= :price")
+    List<Produto> findByPriceLessThan(@Param("price") Double produtoPrice);
 }

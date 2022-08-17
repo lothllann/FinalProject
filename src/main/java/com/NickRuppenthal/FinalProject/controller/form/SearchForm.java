@@ -8,16 +8,16 @@ import java.util.List;
 
 public class SearchForm {
 
-    private Double max_price;
-    private Double min_price;
+    private String max_price;
+    private String min_price;
     private String q;
 
     public Double getMax_price() {
-        return max_price;
+        return  Double.parseDouble(max_price);
     }
 
     public Double getMin_price() {
-        return min_price;
+        return Double.parseDouble(min_price);
     }
 
     public String getQ() {

@@ -1,6 +1,8 @@
 package com.NickRuppenthal.FinalProject.controller;
 
 
+import com.NickRuppenthal.FinalProject.config.exception.MethodArgumentNotValidException;
+import com.NickRuppenthal.FinalProject.config.exception.NotFoundException;
 import com.NickRuppenthal.FinalProject.controller.dto.ProdutoDto;
 import com.NickRuppenthal.FinalProject.controller.form.ProdutoForm;
 import com.NickRuppenthal.FinalProject.controller.form.SearchForm;
@@ -42,22 +44,23 @@ public class ProdutoController {
     @GetMapping("/search")
     public ResponseEntity<List<ProdutoDto>> search(@RequestBody SearchForm sForm){
 
-
-//        Double DoubleResultMax = Double.parseDouble(sForm.getMax_price());
-//        Double DoubeResultMin = Double.parseDouble(sForm.getMin_price());
-
         Produto resultQ = pRepository.findByName(sForm.getQ());
-        Produto resultMax = pRepository.findByPriceGreaterThan(sForm.getMax_price());
-        Produto resultMin = pRepository.findByPriceLessThan(sForm.getMax_price());
+        List<Produto> resultMax = pRepository.findByPrice(sForm.getMax_price());
+        List<Produto> resultMin = pRepository.findByPriceLessThan(sForm.getMin_price());
 
 
         List<Produto> resultadoDaBusca = new ArrayList<Produto>();
 
+
+        resultMax.forEach( e ->{
+            resultadoDaBusca.add(e);
+        });
+
+        resultMin.forEach( e ->{
+            resultadoDaBusca.add(e);
+        });
+
         resultadoDaBusca.add(resultQ);
-
-        resultadoDaBusca.add(resultMax);
-        resultadoDaBusca.add(resultMin);
-
 
         return ResponseEntity.ok(ProdutoDto.converter(resultadoDaBusca));
 
@@ -77,7 +80,12 @@ public class ProdutoController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<ProdutoDto> create(@RequestBody  @Valid ProdutoForm pForm, UriComponentsBuilder uBuilder){
+    public ResponseEntity<ProdutoDto> create(@RequestBody  ProdutoForm pForm, UriComponentsBuilder uBuilder){
+
+        if (pForm.getName().isEmpty() || pForm.getDescription().isEmpty() || pForm.getPrice() == null){
+            throw new MethodArgumentNotValidException("Não deixe campo em branco");
+        }
+
         Produto produto = pForm.converter(pRepository);
         pRepository.save(produto);
 
@@ -91,10 +99,13 @@ public class ProdutoController {
     public ResponseEntity<ProdutoDto> update(@PathVariable Integer id, @RequestBody UpdateForm uForm){
         Optional<Produto> opt = pRepository.findById(id);
         if (opt.isPresent()){
+            if (uForm.getName().isEmpty() || uForm.getDescription().isEmpty() || uForm.getPrice() == null){
+                throw new MethodArgumentNotValidException("Não deixe campo em branco");
+            }
             Produto produto = uForm.atualizar(id, pRepository);
             return ResponseEntity.ok(new ProdutoDto(produto));
         }
-        return ResponseEntity.notFound().build();
+        throw new NotFoundException("Produto não encontrado");
     }
 
 
@@ -106,7 +117,7 @@ public class ProdutoController {
             pRepository.deleteById(id);
             return ResponseEntity.ok().build();
         }
-        return ResponseEntity.notFound().build();
+        throw new NotFoundException("Produto não encontrado");
     }
 
 

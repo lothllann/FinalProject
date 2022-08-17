@@ -1,6 +1,10 @@
-package com.NickRuppenthal.FinalProject.modelo;
+package com.NickRuppenthal.FinalProject.config.exception;
 
-public class ExceptionResponse {
+import java.io.Serializable;
+
+public class ExceptionResponse implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Integer status_code;
     private String message;
