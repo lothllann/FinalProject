@@ -2,11 +2,16 @@ package com.NickRuppenthal.FinalProject.controller.form;
 
 import com.NickRuppenthal.FinalProject.modelo.Produto;
 import com.NickRuppenthal.FinalProject.repository.ProtdutoRepository;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public class ProdutoForm {
 
+    @NotNull @NotEmpty @Length(min = 5)
     private String description;
-
+    @NotNull @NotEmpty @Length(min = 4)
     private String name;
 
     private Double price;

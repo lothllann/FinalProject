@@ -9,13 +9,17 @@ import com.NickRuppenthal.FinalProject.modelo.Produto;
 import com.NickRuppenthal.FinalProject.repository.ProtdutoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,21 +34,39 @@ public class ProdutoController {
 
 
     @GetMapping
-    public List<ProdutoDto> list(){
+    public ResponseEntity<List<ProdutoDto>> list(){
         List<Produto> produtos = pRepository.findAll();
-        return ProdutoDto.converter(produtos);
+        return ResponseEntity.ok(ProdutoDto.converter(produtos));
     }
 
-//    @GetMapping("/search")
-//    public List<ProdutoDto> search(@RequestBody SearchForm search){
-//        List<Produto> produtos = pRepository.findAll();
-//
-//    }
+    @GetMapping("/search")
+    public ResponseEntity<List<ProdutoDto>> search(@RequestBody SearchForm sForm){
+
+
+//        Double DoubleResultMax = Double.parseDouble(sForm.getMax_price());
+//        Double DoubeResultMin = Double.parseDouble(sForm.getMin_price());
+
+        Produto resultQ = pRepository.findByName(sForm.getQ());
+        Produto resultMax = pRepository.findByPriceGreaterThan(sForm.getMax_price());
+        Produto resultMin = pRepository.findByPriceLessThan(sForm.getMax_price());
+
+
+        List<Produto> resultadoDaBusca = new ArrayList<Produto>();
+
+        resultadoDaBusca.add(resultQ);
+
+        resultadoDaBusca.add(resultMax);
+        resultadoDaBusca.add(resultMin);
+
+
+        return ResponseEntity.ok(ProdutoDto.converter(resultadoDaBusca));
+
+    }
 
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProdutoDto> findById(@PathVariable Integer id){
+    public ResponseEntity<ProdutoDto> findById(@PathVariable @Valid Integer id){
         Optional<Produto> produto = pRepository.findById(id);
         if (produto.isPresent()){
             return ResponseEntity.ok(new ProdutoDto(produto.get()));
@@ -55,7 +77,7 @@ public class ProdutoController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<ProdutoDto> create(@RequestBody  ProdutoForm pForm, UriComponentsBuilder uBuilder){
+    public ResponseEntity<ProdutoDto> create(@RequestBody  @Valid ProdutoForm pForm, UriComponentsBuilder uBuilder){
         Produto produto = pForm.converter(pRepository);
         pRepository.save(produto);
 
