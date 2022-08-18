@@ -10,14 +10,10 @@ import java.util.Optional;
 
 public interface ProtdutoRepository extends JpaRepository<Produto, Integer> {
 
-    @Query("SELECT p FROM Produto p WHERE p.name = :name")
-    Produto findByName(@Param("name") String produtoName);
+    @Query("SELECT p FROM Produto p WHERE p.price >= :bprice" +
+            " or p.price <= :lprice" +
+            " or p.name = :name ")
+    List<Produto> findProdutoByPriceByName(@Param("bprice") Double biggerPrice, @Param("lprice") Double lesserPrice, @Param("name") String name );
 
 
-    @Query("SELECT p FROM Produto p WHERE p.price >= :price")
-    List<Produto> findByPrice(@Param("price") Double produtoPrice);
-
-
-    @Query("SELECT p FROM Produto p WHERE p.price <= :price")
-    List<Produto> findByPriceLessThan(@Param("price") Double produtoPrice);
 }

@@ -10,6 +10,7 @@ import com.NickRuppenthal.FinalProject.controller.form.UpdateForm;
 import com.NickRuppenthal.FinalProject.modelo.Produto;
 import com.NickRuppenthal.FinalProject.repository.ProtdutoRepository;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
@@ -42,28 +43,12 @@ public class ProdutoController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ProdutoDto>> search(@RequestBody SearchForm sForm){
-
-        Produto resultQ = pRepository.findByName(sForm.getQ());
-        List<Produto> resultMax = pRepository.findByPrice(sForm.getMax_price());
-        List<Produto> resultMin = pRepository.findByPriceLessThan(sForm.getMin_price());
-
-
-        List<Produto> resultadoDaBusca = new ArrayList<Produto>();
-
-
-        resultMax.forEach( e ->{
-            resultadoDaBusca.add(e);
-        });
-
-        resultMin.forEach( e ->{
-            resultadoDaBusca.add(e);
-        });
-
-        resultadoDaBusca.add(resultQ);
-
+    public ResponseEntity<List<ProdutoDto>> search(@RequestBody  SearchForm sForm){
+        List<Produto> resultadoDaBusca = pRepository.findProdutoByPriceByName(Double.parseDouble(sForm.getMax_price()), Double.parseDouble(sForm.getMin_price()), sForm.getQ());
+        if(resultadoDaBusca.isEmpty()){
+            throw new NotFoundException("Nenhum Produto encontrado");
+        }
         return ResponseEntity.ok(ProdutoDto.converter(resultadoDaBusca));
-
     }
 
 
@@ -75,7 +60,7 @@ public class ProdutoController {
             return ResponseEntity.ok(new ProdutoDto(produto.get()));
         }
 
-        return ResponseEntity.notFound().build();
+        throw new NotFoundException("Produto não encontrado");
     }
 
     @PostMapping
