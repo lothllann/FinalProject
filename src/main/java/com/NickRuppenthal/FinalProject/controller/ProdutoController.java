@@ -3,6 +3,7 @@ package com.NickRuppenthal.FinalProject.controller;
 
 import com.NickRuppenthal.FinalProject.config.exception.MethodArgumentNotValidException;
 import com.NickRuppenthal.FinalProject.config.exception.NotFoundException;
+import com.NickRuppenthal.FinalProject.controller.dto.DeleteDto;
 import com.NickRuppenthal.FinalProject.controller.dto.ProdutoDto;
 import com.NickRuppenthal.FinalProject.controller.form.ProdutoForm;
 import com.NickRuppenthal.FinalProject.controller.form.SearchForm;
@@ -70,8 +71,9 @@ public class ProdutoController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public void delete(@PathVariable Integer id){
-        ResponseEntity<?> produto = pService.delete(id);
+    public DeleteDto delete(@PathVariable Integer id){
+        DeleteDto produto = pService.delete(id);
+        return produto;
     }
 
 

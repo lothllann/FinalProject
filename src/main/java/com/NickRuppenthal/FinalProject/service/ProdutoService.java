@@ -2,17 +2,15 @@ package com.NickRuppenthal.FinalProject.service;
 
 import com.NickRuppenthal.FinalProject.config.exception.MethodArgumentNotValidException;
 import com.NickRuppenthal.FinalProject.config.exception.NotFoundException;
-import com.NickRuppenthal.FinalProject.controller.dto.ProdutoDto;
+import com.NickRuppenthal.FinalProject.controller.dto.DeleteDto;
 import com.NickRuppenthal.FinalProject.controller.form.ProdutoForm;
 import com.NickRuppenthal.FinalProject.controller.form.SearchForm;
 import com.NickRuppenthal.FinalProject.controller.form.UpdateForm;
 import com.NickRuppenthal.FinalProject.modelo.Produto;
 import com.NickRuppenthal.FinalProject.repository.ProtdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,13 +62,11 @@ public class ProdutoService {
     }
 
 
-    public ResponseEntity<?> delete(Integer id){
-        Optional<Produto> produto = pRepository.findById(id);
-        if (produto.isPresent()){
-            pRepository.deleteById(id);
-            return ResponseEntity.ok().build();
-        }
-        throw new NotFoundException("Produto não encontrado");
+    public DeleteDto delete(Integer id){
+        Optional.of(pRepository.findById(id).orElseThrow(()-> new NotFoundException("Produto não encontrado")));
+        pRepository.deleteById(id);
+        DeleteDto delDto = new DeleteDto(200,"Item "+ id +" excluido com sucesso");
+        return delDto;
     }
 }
 
