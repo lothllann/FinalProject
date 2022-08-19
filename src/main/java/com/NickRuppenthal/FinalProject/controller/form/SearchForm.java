@@ -9,7 +9,7 @@ import java.util.List;
 
 public class SearchForm {
 
-    private String  max_price;
+    private String max_price;
     private String min_price;
     private String q;
 

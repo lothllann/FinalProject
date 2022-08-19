@@ -10,6 +10,7 @@ import com.NickRuppenthal.FinalProject.controller.form.UpdateForm;
 import com.NickRuppenthal.FinalProject.modelo.Produto;
 import com.NickRuppenthal.FinalProject.repository.ProtdutoRepository;
 
+import com.NickRuppenthal.FinalProject.service.ProdutoService;
 import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -30,79 +31,47 @@ import java.util.Optional;
 @RequestMapping("/products")
 public class ProdutoController {
 
-
     @Autowired
-    private ProtdutoRepository pRepository;
-
+    private ProdutoService pService;
 
 
     @GetMapping
     public ResponseEntity<List<ProdutoDto>> list(){
-        List<Produto> produtos = pRepository.findAll();
+        List<Produto> produtos = pService.list();
         return ResponseEntity.ok(ProdutoDto.converter(produtos));
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<ProdutoDto>> search(@RequestBody  SearchForm sForm){
-        List<Produto> resultadoDaBusca = pRepository.findProdutoByPriceByName(Double.parseDouble(sForm.getMax_price()), Double.parseDouble(sForm.getMin_price()), sForm.getQ());
-        if(resultadoDaBusca.isEmpty()){
-            throw new NotFoundException("Nenhum Produto encontrado");
-        }
+        List<Produto> resultadoDaBusca = pService.search(sForm);
         return ResponseEntity.ok(ProdutoDto.converter(resultadoDaBusca));
     }
 
-
-
     @GetMapping("/{id}")
     public ResponseEntity<ProdutoDto> findById(@PathVariable @Valid Integer id){
-        Optional<Produto> produto = pRepository.findById(id);
-        if (produto.isPresent()){
-            return ResponseEntity.ok(new ProdutoDto(produto.get()));
-        }
-
-        throw new NotFoundException("Produto não encontrado");
+        Produto produto = pService.findById(id);
+        return ResponseEntity.ok(new ProdutoDto(produto));
     }
 
     @PostMapping
     @Transactional
     public ResponseEntity<ProdutoDto> create(@RequestBody  ProdutoForm pForm, UriComponentsBuilder uBuilder){
-
-        if (pForm.getName().isEmpty() || pForm.getDescription().isEmpty() || pForm.getPrice() == null){
-            throw new MethodArgumentNotValidException("Não deixe campo em branco");
-        }
-
-        Produto produto = pForm.converter(pRepository);
-        pRepository.save(produto);
-
+        Produto produto = pService.create(pForm);
         URI uri = uBuilder.path("/products/{id}").buildAndExpand(produto.getId()).toUri();
         return ResponseEntity.created(uri).body(new ProdutoDto(produto));
     }
 
-
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<ProdutoDto> update(@PathVariable Integer id, @RequestBody UpdateForm uForm){
-        Optional<Produto> opt = pRepository.findById(id);
-        if (opt.isPresent()){
-            if (uForm.getName().isEmpty() || uForm.getDescription().isEmpty() || uForm.getPrice() == null){
-                throw new MethodArgumentNotValidException("Não deixe campo em branco");
-            }
-            Produto produto = uForm.atualizar(id, pRepository);
-            return ResponseEntity.ok(new ProdutoDto(produto));
-        }
-        throw new NotFoundException("Produto não encontrado");
+        Produto produtoAtt = pService.update(id, uForm);
+        return ResponseEntity.ok(new ProdutoDto(produtoAtt));
     }
-
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity<?> delete(@PathVariable Integer id){
-        Optional<Produto> produto = pRepository.findById(id);
-        if (produto.isPresent()){
-            pRepository.deleteById(id);
-            return ResponseEntity.ok().build();
-        }
-        throw new NotFoundException("Produto não encontrado");
+    public void delete(@PathVariable Integer id){
+        ResponseEntity<?> produto = pService.delete(id);
     }
 
 
