@@ -48,6 +48,19 @@ class FinalProjectApplicationTests {
 		Assert.assertNotNull(produtos);
 	}
 
+	@Test
+	void quandoNaoEcontrarNenhumProdutoLancarNotFoundException(){
+		Integer id = 1;
+		Mockito.when(repositoryMock.findAll()).thenThrow(new NotFoundException("Nenhum Produto encontrado"));
+
+		try{
+			pService.list();
+		} catch (Exception ex){
+			Assert.assertEquals(NotFoundException.class, ex.getClass());
+			Assert.assertEquals("Nenhum Produto encontrado",ex.getMessage());
+		}
+	}
+
 
 	@Test
 	void deveriaBuscarUmProdutoPeloId(){
@@ -122,9 +135,10 @@ class FinalProjectApplicationTests {
 	}
 
 	@Test
-	void deveriaAtualizarUmProduto(){
+	void deveriaAtualizarUmProduto(){}
 
-}
+	@Test
+	void deveDevolverMethodArgumentNotValidExceptionSeTiverUmCampoEmBrancoQuandoForAtualizarUmProduto(){}
 
 	@Test
 	void deveriaExcluirUmProdutoPeloId(){
