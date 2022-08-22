@@ -43,13 +43,13 @@ public class ProdutoController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ProdutoDto>> search(@RequestBody  SearchForm sForm){
-        List<Produto> resultadoDaBusca = pService.search(sForm);
+    public ResponseEntity<List<ProdutoDto>> search(@RequestParam(required = false) Double max_price, @RequestParam(required = false) Double min_price, @RequestParam(required = false) String name){
+        List<Produto> resultadoDaBusca = pService.search(max_price, min_price, name);
         return ResponseEntity.ok(ProdutoDto.converter(resultadoDaBusca));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProdutoDto> findById(@PathVariable @Valid Integer id){
+    public ResponseEntity<ProdutoDto> findById(@PathVariable Integer id){
         Produto produto = pService.findById(id);
         return ResponseEntity.ok(new ProdutoDto(produto));
     }

@@ -13,7 +13,13 @@ public class UpdateForm {
     private Double price;
 
 
+    public UpdateForm(String description, String name, Double price) {
+        this.description = description;
+        this.name = name;
+        this.price = price;
+    }
 
+    public UpdateForm(){}
 
     public String getDescription() {
         return description;

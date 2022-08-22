@@ -17,8 +17,12 @@ import java.util.Optional;
 @Service
 public class ProdutoService {
 
-    @Autowired
+
     private ProtdutoRepository pRepository;
+    @Autowired
+    public ProdutoService(ProtdutoRepository pRepository){
+        this.pRepository = pRepository;
+    }
 
 
     public List<Produto> list() {
@@ -26,8 +30,8 @@ public class ProdutoService {
         return produtos;
     }
 
-    public List<Produto> search(SearchForm sForm){
-        List<Produto> resultadoDaBusca = pRepository.findProdutoByPriceByName(Double.parseDouble(sForm.getMax_price()), Double.parseDouble(sForm.getMin_price()), sForm.getQ());
+    public List<Produto> search(Double max, Double min, String name){
+        List<Produto> resultadoDaBusca = pRepository.findProdutoByPriceByName(max, min, name);
         if(resultadoDaBusca.isEmpty()){
             throw new NotFoundException("Nenhum Produto encontrado");
         }

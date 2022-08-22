@@ -17,12 +17,18 @@ public class Produto {
     private Double price;
 
     public Produto(){}
-
-    public Produto(String name, String description, Double number) {
+    public Produto(String name, String description, Double price) {
         this.name = name;
         this.description = description;
-        this.price = number;
+        this.price = price;
     }
+    public Produto(Integer id, String name, String description, Double price) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+    }
+
 
     @Override
     public int hashCode() {

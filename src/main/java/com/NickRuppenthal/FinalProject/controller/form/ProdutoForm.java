@@ -16,7 +16,13 @@ public class ProdutoForm {
 
     private Double price;
 
+    public ProdutoForm(String description, String name, Double price) {
+        this.description = description;
+        this.name = name;
+        this.price = price;
+    }
 
+    public ProdutoForm(){}
 
     public String getDescription() {
         return description;
