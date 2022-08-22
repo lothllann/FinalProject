@@ -92,6 +92,17 @@ class FinalProjectApplicationTests {
 //		Mockito.verify(att).atualizar(id, repositoryMock);
 //	}
 
+	@Test
+	void deveriaExcluirUmProdutoPeloId(){
+		Integer id = 2;
+		List<Produto> produtos = produtos();
+		Produto produto = produtos.get(1);
+		Mockito.when(repositoryMock.findById(id)).thenReturn(Optional.ofNullable(produto));
+		pService.delete(id);
+		Assert.assertNotNull(id);
+		Assert.assertEquals(id, produto.getId());
+	}
+
 
 
 	private List<Produto> produtos(){
