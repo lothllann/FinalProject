@@ -1,16 +1,20 @@
 package com.NickRuppenthal.FinalProject;
 
+import com.NickRuppenthal.FinalProject.config.exception.MethodArgumentNotValidException;
+import com.NickRuppenthal.FinalProject.config.exception.NotFoundException;
 import com.NickRuppenthal.FinalProject.controller.form.ProdutoForm;
 import com.NickRuppenthal.FinalProject.controller.form.UpdateForm;
 import com.NickRuppenthal.FinalProject.modelo.Produto;
 import com.NickRuppenthal.FinalProject.repository.ProtdutoRepository;
 
 import com.NickRuppenthal.FinalProject.service.ProdutoService;
+import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.junit.Assert;
 
@@ -20,12 +24,15 @@ import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
+
 class FinalProjectApplicationTests {
 
 
 	private ProdutoService pService;
 	@Mock
 	private ProtdutoRepository repositoryMock;
+
+
 
 	@BeforeEach
 	public void beforeEach(){
@@ -41,6 +48,7 @@ class FinalProjectApplicationTests {
 		Assert.assertNotNull(produtos);
 	}
 
+
 	@Test
 	void deveriaBuscarUmProdutoPeloId(){
 		List<Produto> produtos = produtos();
@@ -53,12 +61,40 @@ class FinalProjectApplicationTests {
 	}
 
 	@Test
+	void quandoNaoEcontrarProdutoLancarNotFoundException(){
+		Integer id = 1;
+		Mockito.when(repositoryMock.findById(Mockito.anyInt())).thenThrow(new NotFoundException("Nenhum Produto encontrado"));
+
+		try{
+			pService.findById(id);
+		} catch (Exception ex){
+			Assert.assertEquals(NotFoundException.class, ex.getClass());
+			Assert.assertEquals("Nenhum Produto encontrado",ex.getMessage());
+		}
+	}
+
+	@Test
 	void deveriaBuscarUmProdutoPorPrecoOuPorNome(){
 		List<Produto> produtos = produtos();
 		String nome = "teste2";
 		Double menoPreco = 50.00, maiorPreco = 200.00;
 		Mockito.when(repositoryMock.findProdutoByPriceByName(maiorPreco, menoPreco, nome)).thenReturn(produtos);
 		pService.search(maiorPreco, menoPreco, nome);
+		Mockito.verify(repositoryMock).findProdutoByPriceByName(maiorPreco, menoPreco, nome);
+	}
+
+	@Test
+	void quandoNaoEncontrarProdutoPorPrecoOuPorNome(){
+		String nome = "teste2";
+		Double menoPreco = 50.00, maiorPreco = 200.00;
+		Mockito.when(repositoryMock.findProdutoByPriceByName(maiorPreco, menoPreco, nome)).thenThrow(new NotFoundException("Nenhum Produto encontrado"));
+
+		try{
+			pService.search(maiorPreco, menoPreco, nome);
+		} catch (Exception ex){
+			Assert.assertEquals(NotFoundException.class, ex.getClass());
+			Assert.assertEquals("Nenhum Produto encontrado",ex.getMessage());
+		}
 	}
 
 	@Test
@@ -72,25 +108,23 @@ class FinalProjectApplicationTests {
 		Mockito.verify(repositoryMock).save(produto);
 	}
 
-//	@Test
-//	void deveriaAtualizarUmProduto(){
-//		Integer id = 2;
-//		UpdateForm att = att();
-//
-//		List<Produto> produtos = produtos();
-//		Produto produto = produtos.get(1);
-//		Mockito.when(repositoryMock.findById(id)).thenReturn(Optional.ofNullable(produto));
-//		pService.findById(id);
-//
-//
-//
-//		Produto produtoAtualizado = att.atualizar(id, repositoryMock);
-//
-//		Mockito.when(att.atualizar(id, repositoryMock)).thenReturn(produtoAtualizado);
-//		Assert.assertNotNull(att);
-//		Assert.assertEquals(id,produto.getId());
-//		Mockito.verify(att).atualizar(id, repositoryMock);
-//	}
+	@Test
+	void deveDevolverMethodArgumentNotValidExceptionSeTiverUmCampoEmBrancoQuandoForCriarUmProduto(){
+		Mockito.when(repositoryMock.save(Mockito.any())).thenThrow(new MethodArgumentNotValidException("Não deixe campo em branco"));
+		ProdutoForm form = formulario();
+
+		try {
+			pService.create(form);
+		} catch (Exception ex){
+			Assert.assertEquals(MethodArgumentNotValidException.class, ex.getClass());
+			Assert.assertEquals("Não deixe campo em branco",ex.getMessage());
+		}
+	}
+
+	@Test
+	void deveriaAtualizarUmProduto(){
+
+}
 
 	@Test
 	void deveriaExcluirUmProdutoPeloId(){
@@ -101,6 +135,19 @@ class FinalProjectApplicationTests {
 		pService.delete(id);
 		Assert.assertNotNull(id);
 		Assert.assertEquals(id, produto.getId());
+	}
+
+	@Test
+	void quandoNaoEcontrarProdutoNaoExcluirELancarNotFoundExceptio(){
+		Integer id = 1;
+		Mockito.when(repositoryMock.findById(Mockito.anyInt())).thenThrow(new NotFoundException("Produto não encontrado"));
+
+		try{
+			pService.delete(id);
+		} catch (Exception ex){
+			Assert.assertEquals(NotFoundException.class, ex.getClass());
+			Assert.assertEquals("Produto não encontrado",ex.getMessage());
+		}
 	}
 
 

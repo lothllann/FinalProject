@@ -13,6 +13,8 @@ public class UpdateForm {
     private Double price;
 
 
+
+
     public UpdateForm(String description, String name, Double price) {
         this.description = description;
         this.name = name;
@@ -44,6 +46,8 @@ public class UpdateForm {
     public void setPrice(Double price) {
         this.price = price;
     }
+
+
 
     public Produto atualizar(Integer id, ProtdutoRepository pRepository){
         Produto produto = pRepository.getOne(id);
