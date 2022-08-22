@@ -1,30 +1,21 @@
 package com.NickRuppenthal.FinalProject.controller;
 
 
-import com.NickRuppenthal.FinalProject.config.exception.MethodArgumentNotValidException;
-import com.NickRuppenthal.FinalProject.config.exception.NotFoundException;
 import com.NickRuppenthal.FinalProject.controller.dto.DeleteDto;
 import com.NickRuppenthal.FinalProject.controller.dto.ProdutoDto;
 import com.NickRuppenthal.FinalProject.controller.form.ProdutoForm;
-import com.NickRuppenthal.FinalProject.controller.form.SearchForm;
 import com.NickRuppenthal.FinalProject.controller.form.UpdateForm;
 import com.NickRuppenthal.FinalProject.modelo.Produto;
-import com.NickRuppenthal.FinalProject.repository.ProtdutoRepository;
 
 import com.NickRuppenthal.FinalProject.service.ProdutoService;
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

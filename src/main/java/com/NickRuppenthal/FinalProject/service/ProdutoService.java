@@ -1,7 +1,7 @@
 package com.NickRuppenthal.FinalProject.service;
 
-import com.NickRuppenthal.FinalProject.config.exception.MethodArgumentNotValidException;
-import com.NickRuppenthal.FinalProject.config.exception.NotFoundException;
+import com.NickRuppenthal.FinalProject.config.exceptions.MethodArgumentNotValidException;
+import com.NickRuppenthal.FinalProject.config.exceptions.NotFoundException;
 import com.NickRuppenthal.FinalProject.controller.dto.DeleteDto;
 import com.NickRuppenthal.FinalProject.controller.form.ProdutoForm;
 import com.NickRuppenthal.FinalProject.controller.form.UpdateForm;

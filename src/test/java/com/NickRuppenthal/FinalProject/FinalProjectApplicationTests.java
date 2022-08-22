@@ -1,20 +1,18 @@
 package com.NickRuppenthal.FinalProject;
 
-import com.NickRuppenthal.FinalProject.config.exception.MethodArgumentNotValidException;
-import com.NickRuppenthal.FinalProject.config.exception.NotFoundException;
+import com.NickRuppenthal.FinalProject.config.exceptions.MethodArgumentNotValidException;
+import com.NickRuppenthal.FinalProject.config.exceptions.NotFoundException;
 import com.NickRuppenthal.FinalProject.controller.form.ProdutoForm;
 import com.NickRuppenthal.FinalProject.controller.form.UpdateForm;
 import com.NickRuppenthal.FinalProject.modelo.Produto;
 import com.NickRuppenthal.FinalProject.repository.ProtdutoRepository;
 
 import com.NickRuppenthal.FinalProject.service.ProdutoService;
-import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.junit.Assert;
 
@@ -181,13 +179,11 @@ class FinalProjectApplicationTests {
 	}
 
 	private ProdutoForm formulario(){
-		ProdutoForm form = new ProdutoForm("descrição do teste","teste",100.0);
-		return form;
+		return new ProdutoForm("descrição do teste","teste",100.0);
 	}
 
 	private UpdateForm att(){
-		UpdateForm att = new UpdateForm("descrição do teste de att","teste de att",101.0);
-		return att;
+		return new UpdateForm("descrição do teste de att","teste de att",101.0);
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.NickRuppenthal.FinalProject.config.exception;
+package com.NickRuppenthal.FinalProject.modelo;
 
 import java.io.Serializable;
 
