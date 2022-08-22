@@ -4,7 +4,6 @@ import com.NickRuppenthal.FinalProject.config.exception.MethodArgumentNotValidEx
 import com.NickRuppenthal.FinalProject.config.exception.NotFoundException;
 import com.NickRuppenthal.FinalProject.controller.dto.DeleteDto;
 import com.NickRuppenthal.FinalProject.controller.form.ProdutoForm;
-import com.NickRuppenthal.FinalProject.controller.form.SearchForm;
 import com.NickRuppenthal.FinalProject.controller.form.UpdateForm;
 import com.NickRuppenthal.FinalProject.modelo.Produto;
 import com.NickRuppenthal.FinalProject.repository.ProtdutoRepository;
@@ -26,22 +25,17 @@ public class ProdutoService {
 
 
     public List<Produto> list() {
-        List<Produto> produtos = pRepository.findAll();
-        return produtos;
+        return pRepository.findAll();
     }
 
     public List<Produto> search(Double max, Double min, String name){
         List<Produto> resultadoDaBusca = pRepository.findProdutoByPriceByName(max, min, name);
-        if(resultadoDaBusca.isEmpty()){
-            throw new NotFoundException("Nenhum Produto encontrado");
-        }
+        if(resultadoDaBusca.isEmpty()){throw new NotFoundException("Nenhum Produto encontrado");}
         return resultadoDaBusca;
     }
 
-    public Produto findById(Integer id){
-        Optional<Produto> produto = pRepository.findById(id);
-        if (produto.isPresent()){return produto.get();}
-        throw new NotFoundException("Produto não encontrado");
+    public Optional<Produto> findById(Integer id){
+       return Optional.of(pRepository.findById(id).orElseThrow(()-> new NotFoundException("Produto não encontrado")));
     }
 
     public Produto create(ProdutoForm pForm){
@@ -54,23 +48,18 @@ public class ProdutoService {
     }
 
     public Produto update(Integer id, UpdateForm uForm){
-        Optional<Produto> opt = pRepository.findById(id);
-        if (opt.isPresent()){
-            if (uForm.getName().isEmpty() || uForm.getDescription().isEmpty() || uForm.getPrice() == null){
-                throw new MethodArgumentNotValidException("Não deixe campo em branco");
-            }
-            Produto produto = uForm.atualizar(id, pRepository);
-            return produto;
+        Optional.of(pRepository.findById(id).orElseThrow(()-> new NotFoundException("Produto não encontrado")));
+        if (uForm.getName().isEmpty() || uForm.getDescription().isEmpty() || uForm.getPrice() == null){
+            throw new MethodArgumentNotValidException("Não deixe campo em branco");
         }
-        throw new NotFoundException("Produto não encontrado");
+        return uForm.atualizar(id, pRepository);
     }
 
 
     public DeleteDto delete(Integer id){
         Optional.of(pRepository.findById(id).orElseThrow(()-> new NotFoundException("Produto não encontrado")));
         pRepository.deleteById(id);
-        DeleteDto delDto = new DeleteDto(200,"Item "+ id +" excluido com sucesso");
-        return delDto;
+        return new DeleteDto(200,"Item "+ id +" excluido com sucesso");
     }
 }
 

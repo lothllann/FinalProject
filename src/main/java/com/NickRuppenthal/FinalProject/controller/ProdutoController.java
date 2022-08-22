@@ -50,8 +50,8 @@ public class ProdutoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProdutoDto> findById(@PathVariable Integer id){
-        Produto produto = pService.findById(id);
-        return ResponseEntity.ok(new ProdutoDto(produto));
+        Optional<Produto> produto = pService.findById(id);
+        return ResponseEntity.ok(new ProdutoDto(produto.get()));
     }
 
     @PostMapping
