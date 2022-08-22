@@ -4,7 +4,10 @@ info:
   version: '1.0'
   title: Api Documentation
   termsOfService: urn:tos
-  contact: {}
+  contact: 
+    name: Nickolas Ruppenthal
+    email: nick.ruppenthal@gmail.com
+  
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0
@@ -31,10 +34,16 @@ paths:
               $ref: '#/definitions/ProdutoDto'
         '401':
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
         '403':
           description: Forbidden
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
         '404':
           description: Not Found
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
     post:
       tags:
         - produto-controller
@@ -58,12 +67,20 @@ paths:
             $ref: '#/definitions/ProdutoDto'
         '201':
           description: Created
+          schema:
+            $ref: '#/definitions/ProdutoDto'
         '401':
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
         '403':
           description: Forbidden
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
         '404':
           description: Not Found
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
   /products/search:
     get:
       tags:
@@ -99,10 +116,16 @@ paths:
               $ref: '#/definitions/ProdutoDto'
         '401':
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
         '403':
           description: Forbidden
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
         '404':
           description: Not Found
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
   /products/{id}:
     get:
       tags:
@@ -125,10 +148,16 @@ paths:
             $ref: '#/definitions/ProdutoDto'
         '401':
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
         '403':
           description: Forbidden
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
         '404':
           description: Not Found
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
     put:
       tags:
         - produto-controller
@@ -158,12 +187,20 @@ paths:
             $ref: '#/definitions/ProdutoDto'
         '201':
           description: Created
+          schema:
+            $ref: '#/definitions/ProdutoDto'
         '401':
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
         '403':
           description: Forbidden
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
         '404':
           description: Not Found
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
     delete:
       tags:
         - produto-controller
@@ -185,10 +222,16 @@ paths:
             $ref: '#/definitions/DeleteDto'
         '204':
           description: No Content
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
         '401':
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
         '403':
           description: Forbidden
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
 definitions:
   DeleteDto:
     type: object
@@ -235,3 +278,14 @@ definitions:
         type: number
         format: double
     title: UpdateForm
+  ExceptionResponse:
+    type: object
+    properties:
+      status_code:
+        type: integer
+        format: int64
+      message:
+        type: string
+    title: ExceptionResponse    
+  
+  
