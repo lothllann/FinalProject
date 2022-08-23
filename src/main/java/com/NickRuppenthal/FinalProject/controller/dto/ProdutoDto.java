@@ -1,10 +1,16 @@
 package com.NickRuppenthal.FinalProject.controller.dto;
 
 import com.NickRuppenthal.FinalProject.modelo.Produto;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class ProdutoDto {
 
     private String description;
@@ -21,21 +27,6 @@ public class ProdutoDto {
         this.price = produto.getPrice();
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
 
     public static List<ProdutoDto> converter(List<Produto> produtos) {
         return produtos.stream().map(ProdutoDto::new).collect(Collectors.toList());

@@ -2,11 +2,15 @@ package com.NickRuppenthal.FinalProject.controller.form;
 
 import com.NickRuppenthal.FinalProject.modelo.Produto;
 import com.NickRuppenthal.FinalProject.repository.ProtdutoRepository;
-import org.hibernate.validator.constraints.Length;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProdutoForm {
 
 
@@ -16,37 +20,6 @@ public class ProdutoForm {
 
     private Double price;
 
-    public ProdutoForm(String description, String name, Double price) {
-        this.description = description;
-        this.name = name;
-        this.price = price;
-    }
-
-    public ProdutoForm(){}
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
 
     public Produto converter(ProtdutoRepository pRepository){
         return new Produto(name, description, price);

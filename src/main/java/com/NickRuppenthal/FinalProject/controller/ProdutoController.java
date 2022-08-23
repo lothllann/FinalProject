@@ -63,8 +63,7 @@ public class ProdutoController {
     @DeleteMapping("/{id}")
     @Transactional
     public DeleteDto delete(@PathVariable Integer id){
-        DeleteDto produto = pService.delete(id);
-        return produto;
+        return pService.delete(id);
     }
 
 
