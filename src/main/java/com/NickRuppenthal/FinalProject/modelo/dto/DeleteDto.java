@@ -1,4 +1,4 @@
-package com.NickRuppenthal.FinalProject.controller.dto;
+package com.NickRuppenthal.FinalProject.modelo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
