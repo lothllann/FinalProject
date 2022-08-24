@@ -1,6 +1,5 @@
 package com.NickRuppenthal.FinalProject.config.exceptions;
 
-import com.NickRuppenthal.FinalProject.modelo.ExceptionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;

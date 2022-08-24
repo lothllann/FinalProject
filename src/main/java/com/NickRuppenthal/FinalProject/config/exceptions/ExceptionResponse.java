@@ -1,4 +1,4 @@
-package com.NickRuppenthal.FinalProject.modelo;
+package com.NickRuppenthal.FinalProject.config.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

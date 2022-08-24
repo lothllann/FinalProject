@@ -14,9 +14,11 @@ public class SwaggerConfigurations {
     public Docket ProductApi(){
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.NickRuppenthal.FinalProject"))
                 .paths(PathSelectors.any())
                 .build();
-
     }
+
+
+
 }

@@ -7,20 +7,19 @@ info:
   contact: 
     name: Nickolas Ruppenthal
     email: nick.ruppenthal@gmail.com
-  
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0
 host: localhost:9999
 basePath: /
 tags:
-  - name: produto-controller
-    description: Produto Controller
+  - name: product-resource
+    description: Product Resource
 paths:
   /products:
     get:
       tags:
-        - produto-controller
+        - product-resource
       summary: list
       operationId: listUsingGET
       produces:
@@ -32,12 +31,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ProdutoDto'
-        '401':
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/ExceptionResponse'
-        '403':
-          description: Forbidden
+        '500':
+          description: 500 Massege
           schema:
             $ref: '#/definitions/ExceptionResponse'
         '404':
@@ -46,7 +41,7 @@ paths:
             $ref: '#/definitions/ExceptionResponse'
     post:
       tags:
-        - produto-controller
+        - product-resource
       summary: create
       operationId: createUsingPOST
       consumes:
@@ -55,36 +50,28 @@ paths:
         - '*/*'
       parameters:
         - in: body
-          name: pForm
-          description: pForm
+          name: pDto
+          description: pDto
           required: true
           schema:
-            $ref: '#/definitions/ProdutoForm'
-      responses:
-        '200':
-          description: OK
-          schema:
             $ref: '#/definitions/ProdutoDto'
+      responses:
         '201':
           description: Created
           schema:
             $ref: '#/definitions/ProdutoDto'
-        '401':
-          description: Unauthorized
+        '400':
+          description: Bad Request
           schema:
             $ref: '#/definitions/ExceptionResponse'
-        '403':
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/ExceptionResponse'
-        '404':
-          description: Not Found
+        '500':
+          description: 500 Massage
           schema:
             $ref: '#/definitions/ExceptionResponse'
   /products/search:
     get:
       tags:
-        - produto-controller
+        - product-resource
       summary: search
       operationId: searchUsingGET
       produces:
@@ -114,22 +101,22 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ProdutoDto'
-        '401':
-          description: Unauthorized
+        '400':
+          description: Bad Request
           schema:
-            $ref: '#/definitions/ExceptionResponse'
-        '403':
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/ExceptionResponse'
+            $ref: '#/definitions/ExceptionResponse'      
         '404':
           description: Not Found
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
+        '500':
+          description: 500 message
           schema:
             $ref: '#/definitions/ExceptionResponse'
   /products/{id}:
     get:
       tags:
-        - produto-controller
+        - product-resource
       summary: findById
       operationId: findByIdUsingGET
       produces:
@@ -146,21 +133,21 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/ProdutoDto'
-        '401':
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/ExceptionResponse'
-        '403':
-          description: Forbidden
+        '400':
+          description: Bad Request
           schema:
             $ref: '#/definitions/ExceptionResponse'
         '404':
           description: Not Found
           schema:
             $ref: '#/definitions/ExceptionResponse'
+        '500':
+          description: 500 Massege
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
     put:
       tags:
-        - produto-controller
+        - product-resource
       summary: update
       operationId: updateUsingPUT
       consumes:
@@ -175,35 +162,31 @@ paths:
           type: integer
           format: int32
         - in: body
-          name: uForm
-          description: uForm
+          name: pDto
+          description: pDto
           required: true
           schema:
-            $ref: '#/definitions/UpdateForm'
+            $ref: '#/definitions/ProdutoDto'
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/ProdutoDto'
-        '201':
-          description: Created
+        '400':
+          description: Bad Request
           schema:
-            $ref: '#/definitions/ProdutoDto'
-        '401':
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/ExceptionResponse'
-        '403':
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/ExceptionResponse'
+            $ref: '#/definitions/ExceptionResponse'      
         '404':
           description: Not Found
           schema:
             $ref: '#/definitions/ExceptionResponse'
+        '500':
+          description: 500 message
+          schema:
+            $ref: '#/definitions/ExceptionResponse'
     delete:
       tags:
-        - produto-controller
+        - product-resource
       summary: delete
       operationId: deleteUsingDELETE
       produces:
@@ -220,16 +203,16 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/DeleteDto'
-        '204':
-          description: No Content
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ExceptionResponse'      
+        '404':
+          description: Not Found
           schema:
             $ref: '#/definitions/ExceptionResponse'
-        '401':
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/ExceptionResponse'
-        '403':
-          description: Forbidden
+        '500':
+          description: 500 message
           schema:
             $ref: '#/definitions/ExceptionResponse'
 definitions:
@@ -256,28 +239,6 @@ definitions:
         type: number
         format: double
     title: ProdutoDto
-  ProdutoForm:
-    type: object
-    properties:
-      description:
-        type: string
-      name:
-        type: string
-      price:
-        type: number
-        format: double
-    title: ProdutoForm
-  UpdateForm:
-    type: object
-    properties:
-      description:
-        type: string
-      name:
-        type: string
-      price:
-        type: number
-        format: double
-    title: UpdateForm
   ExceptionResponse:
     type: object
     properties:
@@ -286,6 +247,4 @@ definitions:
         format: int64
       message:
         type: string
-    title: ExceptionResponse    
-  
-  
+    title: ExceptionResponse   

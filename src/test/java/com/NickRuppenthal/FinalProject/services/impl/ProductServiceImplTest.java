@@ -5,7 +5,6 @@ import com.NickRuppenthal.FinalProject.config.exceptions.NotFoundException;
 import com.NickRuppenthal.FinalProject.modelo.Produto;
 import com.NickRuppenthal.FinalProject.modelo.dto.ProdutoDto;
 import com.NickRuppenthal.FinalProject.repository.ProtdutoRepository;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -190,8 +189,9 @@ class ProductServiceImplTest {
     void deveriaExcluirUmProduto_PeloId(){
         Mockito.when(repositoryMock.findById(ID)).thenReturn(optProduto);
         service.delete(ID);
-        Assert.assertNotNull(ID);
-        Assert.assertEquals(ID, produto.getId());
+        assertNotNull(ID);
+        assertEquals(ID, produto.getId());
+        verify(repositoryMock).deleteById(ID);
     }
 
     @Test
