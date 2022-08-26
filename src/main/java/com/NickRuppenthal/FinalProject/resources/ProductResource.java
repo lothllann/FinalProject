@@ -17,13 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/products")
 public class ProductResource {
-
-    public static final Integer ID       = 1;
-    public static final String NAME      = "teste1";
-    public static final String DESCRICAO = "teste de descrição1";
-    public static final double PRICE     = 100.0;
-
-
+    
     @Autowired
     private ProductService service;
     private ModelMapper mapper = new ModelMapper();
