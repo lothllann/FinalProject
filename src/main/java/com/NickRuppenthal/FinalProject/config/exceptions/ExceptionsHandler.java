@@ -43,6 +43,13 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(eResponse,HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(NumberFormatException.class)
+    public final ResponseEntity<ExceptionResponse> handleNumberFormatException(Exception exception, WebRequest req){
+
+        ExceptionResponse eResponse = new ExceptionResponse(400, exception.getMessage());
+        return new ResponseEntity<>(eResponse, HttpStatus.BAD_REQUEST);
+    }
+
 
 
 

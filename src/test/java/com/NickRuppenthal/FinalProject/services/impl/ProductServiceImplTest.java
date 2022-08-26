@@ -12,6 +12,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +34,8 @@ class ProductServiceImplTest {
     public static final double MAX_PRICE = 90.0;
     public static final double MIN_PRICE = 50.0;
     public static final int INDEX = 0;
+    public static final Sort sort = Sort.by("name").ascending();
+    public static final Pageable PAGINACAO = PageRequest.of(0,7, sort);
     @InjectMocks
     private ProductServiceImpl service;
     @Mock
@@ -98,19 +103,19 @@ class ProductServiceImplTest {
 
     @Test
     void deveriaBuscarUmProduto_PorPrecoOuPorNome(){
-        Mockito.when(repositoryMock.findProdutoByPriceByName(MAX_PRICE, MIN_PRICE, NAME)).thenReturn(List.of(produto));
+        Mockito.when(repositoryMock.findProdutoByPriceByName(MAX_PRICE, MIN_PRICE, NAME, PAGINACAO)).thenReturn(List.of(produto));
         List<Produto> response = service.search(MAX_PRICE, MIN_PRICE, NAME);
         assertEquals(Produto.class, response.get(INDEX).getClass());
         assertEquals(ID, response.get(INDEX).getId());
         assertEquals(NAME, response.get(INDEX).getName());
         assertEquals(DESCRICAO, response.get(INDEX).getDescription());
         assertEquals(Optional.of(PRICE), Optional.of(response.get(INDEX).getPrice()));
-        verify(repositoryMock).findProdutoByPriceByName(MAX_PRICE, MIN_PRICE, NAME);
+        verify(repositoryMock).findProdutoByPriceByName(MAX_PRICE, MIN_PRICE, NAME, PAGINACAO);
     }
 
     @Test
     void quandoNaoEncontrarProduto_PorPrecoOuPorNome(){
-        Mockito.when(repositoryMock.findProdutoByPriceByName(MAX_PRICE, MIN_PRICE, NAME)).thenThrow(new NotFoundException("Nenhum Produto encontrado"));
+        Mockito.when(repositoryMock.findProdutoByPriceByName(MAX_PRICE, MIN_PRICE, NAME, PAGINACAO)).thenThrow(new NotFoundException("Nenhum Produto encontrado"));
 
         try{
             service.search(MAX_PRICE, MIN_PRICE, NAME);

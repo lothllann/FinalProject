@@ -18,6 +18,11 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductResource {
 
+    public static final Integer ID       = 1;
+    public static final String NAME      = "teste1";
+    public static final String DESCRICAO = "teste de descrição1";
+    public static final double PRICE     = 100.0;
+
 
     @Autowired
     private ProductService service;
@@ -30,7 +35,7 @@ public class ProductResource {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProdutoDto> findById(@PathVariable Integer id){
-        return ResponseEntity.ok(new ProdutoDto(service.findById(id).get()));
+            return ResponseEntity.ok(new ProdutoDto(service.findById(id).get()));
     }
 
     @GetMapping("/search")
@@ -64,6 +69,7 @@ public class ProductResource {
     public ResponseEntity<DeleteDto> delete(@PathVariable Integer id){
         return ResponseEntity.ok(service.delete(id));
     }
+
 
 
 }
