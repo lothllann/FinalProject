@@ -7,23 +7,24 @@ import com.NickRuppenthal.FinalProject.modelo.dto.ProdutoDto;
 import com.NickRuppenthal.FinalProject.services.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
-import java.util.List;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/products")
 public class ProductResource {
-    
+
     @Autowired
     private ProductService service;
     private ModelMapper mapper = new ModelMapper();
 
     @GetMapping
-    public ResponseEntity<List<ProdutoDto>> list(){
+    public ResponseEntity<Page<ProdutoDto>> list(){
         return ResponseEntity.ok(ProdutoDto.converter(service.list().get()));
     }
 
@@ -33,17 +34,17 @@ public class ProductResource {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ProdutoDto>> search(@RequestParam(required = false) Double max_price,
+    public ResponseEntity<Page<ProdutoDto>> search(@RequestParam(required = false) Double max_price,
                                                    @RequestParam(required = false) Double min_price,
                                                    @RequestParam(required = false) String name){
 
-        List<Produto> resultadoDaBusca = service.search(max_price, min_price, name);
+        Page<Produto> resultadoDaBusca = service.search(max_price, min_price, name);
         return ResponseEntity.ok(ProdutoDto.converter(resultadoDaBusca));
     }
 
     @PostMapping
     @Transactional
-    public ResponseEntity<ProdutoDto> create(@RequestBody ProdutoDto pDto, UriComponentsBuilder uBuilder ){
+    public ResponseEntity<ProdutoDto> create(@RequestBody @Valid ProdutoDto pDto, UriComponentsBuilder uBuilder ){
         Produto produto = service.create(pDto);
         return ResponseEntity.created(uBuilder.path("/products/{id}")
                              .buildAndExpand(produto.getId()).toUri())
@@ -52,7 +53,7 @@ public class ProductResource {
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<ProdutoDto> update(@PathVariable Integer id, @RequestBody ProdutoDto pDto){
+    public ResponseEntity<ProdutoDto> update(@PathVariable Integer id, @RequestBody @Valid ProdutoDto pDto){
         pDto.setId(id);
         return ResponseEntity.ok().body(mapper.map(service.update(id, pDto), ProdutoDto.class));
     }

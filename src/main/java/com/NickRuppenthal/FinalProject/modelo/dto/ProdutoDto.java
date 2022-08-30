@@ -6,9 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
@@ -16,8 +16,11 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ProdutoDto {
     private Integer id;
+    @NotBlank(message = "A Descrição é obrigatoria")
     private String description;
+    @NotBlank(message = "O Nome é obrigatorio")
     private String name;
+    @NotBlank(message = "O Preço é obrigatorio")
     private Double price;
 
     public ProdutoDto(String description, String name, Double price) {
@@ -34,8 +37,9 @@ public class ProdutoDto {
     }
 
 
-    public static List<ProdutoDto> converter(List<Produto> produtos) {
-        return produtos.stream().map(ProdutoDto::new).collect(Collectors.toList());
+    public static Page<ProdutoDto> converter(Page<Produto> produtos) {
+        return produtos.map(ProdutoDto::new);
+             //produtos.stream().map(ProdutoDto::new).collect(Collectors.toList());
     }
 
     public Produto transformar(ProtdutoRepository pRepository){
