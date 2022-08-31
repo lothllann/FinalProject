@@ -1,5 +1,6 @@
 package com.NickRuppenthal.FinalProject.services.impl;
 
+import com.NickRuppenthal.FinalProject.config.exceptions.MethodArgumentNotValidException;
 import com.NickRuppenthal.FinalProject.config.exceptions.NotFoundException;
 import com.NickRuppenthal.FinalProject.modelo.Produto;
 import com.NickRuppenthal.FinalProject.modelo.dto.DeleteDto;
@@ -50,6 +51,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Produto create(ProdutoDto pDto) {
+        checkForm(pDto);
         Produto produto = pDto.transformar(pRepository);
         pRepository.save(produto);
         return produto;
@@ -57,6 +59,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Produto update(Integer id, ProdutoDto pDto) {
+        checkForm(pDto);
         Optional.of(pRepository.findById(id).orElseThrow(()-> new NotFoundException("Produto não encontrado")));
         return pRepository.save(mapper.map(pDto, Produto.class));
     }
@@ -66,6 +69,19 @@ public class ProductServiceImpl implements ProductService {
         Optional.of(pRepository.findById(id).orElseThrow(()-> new NotFoundException("Produto não encontrado")));
         pRepository.deleteById(id);
         return new DeleteDto(200,"Item "+ id +" excluido com sucesso");
+    }
+
+
+    private void checkForm(ProdutoDto formulario){
+        if (formulario.getName().isEmpty()){
+            throw new MethodArgumentNotValidException("O Nome do produto é obrigatório");
+        }
+        if (formulario.getDescription().isEmpty()){
+            throw new MethodArgumentNotValidException("A Descrição do produto é obrigatória");
+        }
+        if (formulario.getPrice() == null){
+            throw new MethodArgumentNotValidException("O Preço do produto é obrigatório");
+        }
     }
 
 

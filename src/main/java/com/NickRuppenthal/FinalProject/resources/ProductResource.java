@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/products")
@@ -44,7 +43,7 @@ public class ProductResource {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<ProdutoDto> create(@RequestBody @Valid ProdutoDto pDto, UriComponentsBuilder uBuilder ){
+    public ResponseEntity<ProdutoDto> create(@RequestBody  ProdutoDto pDto, UriComponentsBuilder uBuilder ){
         Produto produto = service.create(pDto);
         return ResponseEntity.created(uBuilder.path("/products/{id}")
                              .buildAndExpand(produto.getId()).toUri())
@@ -53,7 +52,7 @@ public class ProductResource {
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<ProdutoDto> update(@PathVariable Integer id, @RequestBody @Valid ProdutoDto pDto){
+    public ResponseEntity<ProdutoDto> update(@PathVariable Integer id, @RequestBody  ProdutoDto pDto){
         pDto.setId(id);
         return ResponseEntity.ok().body(mapper.map(service.update(id, pDto), ProdutoDto.class));
     }

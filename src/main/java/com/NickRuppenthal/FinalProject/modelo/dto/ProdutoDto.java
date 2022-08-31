@@ -20,7 +20,7 @@ public class ProdutoDto {
     private String description;
     @NotBlank(message = "O Nome é obrigatorio")
     private String name;
-    @NotBlank(message = "O Preço é obrigatorio")
+
     private Double price;
 
     public ProdutoDto(String description, String name, Double price) {
