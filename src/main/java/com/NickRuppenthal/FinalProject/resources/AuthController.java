@@ -1,5 +1,6 @@
 package com.NickRuppenthal.FinalProject.resources;
 
+import com.NickRuppenthal.FinalProject.modelo.dto.TokenDto;
 import com.NickRuppenthal.FinalProject.services.TokenService;
 import com.NickRuppenthal.FinalProject.modelo.dto.LoginDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,7 @@ public class AuthController {
         try {
             Authentication authentication = authManager.authenticate(dadosLogin);
             String token = tokenService.gerarToken(authentication);
-            System.out.println(token);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(new TokenDto(token,"Bearer"));
         } catch (AuthenticationException e){
             return ResponseEntity.badRequest().build();
         }
