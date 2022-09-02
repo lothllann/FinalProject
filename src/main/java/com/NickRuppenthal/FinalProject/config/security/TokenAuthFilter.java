@@ -1,6 +1,10 @@
 package com.NickRuppenthal.FinalProject.config.security;
 
+import com.NickRuppenthal.FinalProject.modelo.Usuario;
+import com.NickRuppenthal.FinalProject.repository.UserRepository;
 import com.NickRuppenthal.FinalProject.services.TokenService;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -12,9 +16,11 @@ import java.io.IOException;
 public class TokenAuthFilter extends OncePerRequestFilter {
 
     private TokenService tokenService;
+    private UserRepository uRepository;
 
-    public TokenAuthFilter(TokenService tokenService) {
+    public TokenAuthFilter(TokenService tokenService, UserRepository repository) {
         this.tokenService = tokenService;
+        this.uRepository = repository;
     }
 
     @Override
@@ -22,9 +28,18 @@ public class TokenAuthFilter extends OncePerRequestFilter {
 
         String token = recuperarToken(request);
         boolean tokenValido = tokenService.isTokenValid(token);
-        
+        if (tokenValido){
+            autenticarUsuario(token);
+        }
 
         filterChain.doFilter(request, response);
+    }
+
+    private void autenticarUsuario(String token) {
+        Long idUsuario = tokenService.getIdUsuario(token);
+        Usuario usuario = uRepository.findById(idUsuario).get();
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     private String recuperarToken(HttpServletRequest request) {

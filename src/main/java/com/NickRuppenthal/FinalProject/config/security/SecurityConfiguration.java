@@ -1,6 +1,7 @@
 package com.NickRuppenthal.FinalProject.config.security;
 
 
+import com.NickRuppenthal.FinalProject.repository.UserRepository;
 import com.NickRuppenthal.FinalProject.services.AutenticationService;
 import com.NickRuppenthal.FinalProject.services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private UserRepository uRepository;
+
     @Override
     @Bean
     protected AuthenticationManager authenticationManager() throws Exception {
@@ -47,7 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().addFilterBefore(new TokenAuthFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
+                .and().addFilterBefore(new TokenAuthFilter(tokenService, uRepository), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
